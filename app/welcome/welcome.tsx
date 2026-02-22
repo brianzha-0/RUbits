@@ -1,18 +1,46 @@
 import logoDark from "./logo-dark.svg";
 import logoLight from "./logo-light.svg";
 import Webcam from "react-webcam";
+import React from "react";
 
 export function Welcome() {
+  const webcamRef = React.useRef(null);
+  const [screenshots, setScreenshots] = React.useState([]);
+  
+  const captureScreenshots = async () => {
+    const captures = [];
+    for (let i = 0; i < 100; i++) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      if (imageSrc) captures.push(imageSrc);
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+    setScreenshots(captures);
+  };
+
   return (
     <main className="flex flex-col items-center justify-center pt-16 pb-4 gap-10">
       {typeof window !== "undefined" && (
         <Webcam
           audio={false}
+          ref={webcamRef}
           screenshotFormat="image/jpeg"
           videoConstraints={{ facingMode: "user" }}
           className="rounded-xl w-[500px] max-w-[100vw]"
         />
       )}
+
+      <button
+        onClick={captureScreenshots}
+        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Capture 100 Screenshots
+      </button>
+
+      <div className="screenshots-grid">
+        {screenshots.map((src, index) => (
+          <img key={index} src={src} alt={`Screenshot ${index + 1}`} className="max-w-xs mb-2" />
+        ))}
+      </div>
 
       <div className="flex-1 flex flex-col items-center gap-16 min-h-0">
         <header className="flex flex-col items-center gap-9">
