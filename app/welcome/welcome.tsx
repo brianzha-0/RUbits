@@ -1,5 +1,3 @@
-import logoDark from "./logo-dark.svg";
-import logoLight from "./logo-light.svg";
 import Webcam from "react-webcam";
 import React from "react";
 
@@ -46,13 +44,13 @@ export function Welcome() {
         <header className="flex flex-col items-center gap-9">
           <div className="w-[500px] max-w-[100vw] p-4">
             <img
-              src={logoLight}
-              alt="React Router"
+              src="/1273436.png"
+              alt="Rubik's Cube Artwork Deep Etched"
               className="block w-full dark:hidden"
             />
             <img
-              src={logoDark}
-              alt="React Router"
+              src="/1273436.png"
+              alt="Rubik's Cube Artwork Deep Etched"
               className="hidden w-full dark:block"
             />
           </div>
