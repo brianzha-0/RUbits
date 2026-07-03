@@ -23,7 +23,7 @@ export const links: Route.LinksFunction = () => [
   },
   { 
     rel: "icon", 
-    href: "/build/client/diamondsion.jfif"
+    href: "/build/client/diamondsionall.jfif"
   },
 ];
 
