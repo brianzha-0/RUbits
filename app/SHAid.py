@@ -18,13 +18,13 @@ while True:
 
     mask = cv2.inRange(HSVG, lowered, uppered)
 
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cntours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    for contour in contours:
-        aread = cv2.contourArea(countour)
+    for cntour in cntours:
+        aread = cv2.contourArea(cntour)
 
-        if 500 < area:
-            w, h, x, y = cv2.boundingRect(contour)
+        if 500 < aread:
+            w, h, x, y = cv2.boundingRect(cntour)
 
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(frame, "Red Thing", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)

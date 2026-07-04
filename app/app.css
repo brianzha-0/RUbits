@@ -13,3 +13,17 @@ body {
     color-scheme: dark;
   }
 }
+
+.vtx-fade-el {
+  opacity: 0;
+  animation: fadeInEffect 1.5s ease-in-out forwards;
+}
+
+@keyframes fadeInEffect {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

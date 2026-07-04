@@ -8,7 +8,7 @@ export function Welcome() {
   
   const captureScreenshots = async () => {
     const captures = [];
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; ++i) {
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc) captures.push(imageSrc);
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -19,7 +19,8 @@ export function Welcome() {
   return (
     <main className="flex flex-col items-center justify-center pt-16 pb-4 gap-10">
       <div>
-        <img 
+        <img
+          className="vtx-fade-el"
           src={DSPlay} 
           alt="Digital Signal Processing (DSP) Logo (Asset) Representation" 
           style={{ width: "480px", height: "480px", margin: "-40px 0 0 0" }} 
