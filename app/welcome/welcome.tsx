@@ -1,19 +1,30 @@
 import Webcam from "react-webcam";
 import React from "react";
 import DSPlay from "/build/client/diamondsionall.jfif";
+import { sendImages } from "../api";
 
 export function Welcome() {
   const webcamRef = React.useRef(null);
   const [screenshots, setScreenshots] = React.useState([]);
+  const [solution, setSolution] = React.useState("");
   
   const captureScreenshots = async () => {
-    const captures = [];
-    for (let i = 0; i < 100; ++i) {
-      const imageSrc = webcamRef.current.getScreenshot();
-      if (imageSrc) captures.push(imageSrc);
-      await new Promise(resolve => setTimeout(resolve, 200));
-    }
-    setScreenshots(captures);
+      const captures = [];
+      for (let i = 0; i < 100; ++i) {
+          const imageSrc = webcamRef.current.getScreenshot();
+          if (imageSrc)
+              captures.push(imageSrc);
+          await new Promise(resolve => setTimeout(resolve, 200));
+      }
+      setScreenshots(captures);
+      try {
+          const moves = await sendImages(captures);
+          setSolution(moves);
+      }
+      catch(err) {
+          console.error(err);
+          setSolution("Failed to solve cube.");
+      }
   };
 
   return (
@@ -42,6 +53,21 @@ export function Welcome() {
       >
         Capture 100 Screenshots
       </button>
+
+      {solution && (
+        <div
+            style={{
+                marginTop: "20px",
+                color: "white",
+                fontSize: "22px",
+                textAlign: "center"
+            }}
+        >
+            <strong>Solution:</strong>
+            <br />
+            {solution}
+        </div>
+      )}
 
       <div className="screenshots-grid">
         {screenshots.map((src, index) => (

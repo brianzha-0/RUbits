@@ -50,7 +50,7 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
+  let message = "OOP!";
   let details = "An expected error occurred.";
   let stack: string | undefined;
 
@@ -58,7 +58,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     message = error.status === 404 ? "404" : "Error";
     details =
       error.status === 404
-        ? "The requested page trying to be found."
+        ? "The requested page is trying to be found."
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
