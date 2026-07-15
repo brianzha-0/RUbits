@@ -33,14 +33,12 @@ interface CubeState {
 }
 
 
-
 const MODEL =
 "rubiks-cube-colors/2";
 
 
 const API =
 "https://detect.roboflow.com/";
-
 
 
 function convertColor(
@@ -76,7 +74,6 @@ function convertColor(
 }
 
 
-
 function blankCube():CubeState{
 
     return {
@@ -93,7 +90,6 @@ function blankCube():CubeState{
 }
 
 
-
 export default function Scanner(){
 
 
@@ -101,10 +97,8 @@ export default function Scanner(){
         useRef<Webcam>(null);
 
 
-
     const [frames,setFrames] =
         useState<string[]>([]);
-
 
 
     const [cube,setCube] =
@@ -124,7 +118,6 @@ export default function Scanner(){
             const img =
                 webcamRef.current
                 ?.getScreenshot();
-
 
 
             if(img)
@@ -238,7 +231,6 @@ export default function Scanner(){
         ColorName[]=[];
 
 
-
         for(const frame of predictions){
 
 
@@ -342,7 +334,6 @@ export default function Scanner(){
             >
                 Scan Cube
             </button>
-
 
 
             {
