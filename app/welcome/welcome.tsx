@@ -3,6 +3,7 @@ import React from "react";
 import DSPlay from "/build/client/diamondsionall.jfif";
 import { sendImages } from "../api";
 import { Link } from "react-router";
+import Provisual from "~/components/provisual";
 
 export default function Welcome() {
 
@@ -134,6 +135,9 @@ export default function Welcome() {
                 Open Cube Editor
             </Link>
 
+            <div>
+                <Provisual />
+            </div>
 
         </main>
     );

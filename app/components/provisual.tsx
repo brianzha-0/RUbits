@@ -1,6 +1,6 @@
 import React, {useRef, useState} from "react";
 import Webcam from "react-webcam";
-import axios from "axios";
+//import axios from "axios";
 
 
 type ColorName =
@@ -351,6 +351,14 @@ export default function Scanner(){
                 </pre>
             }
 
+            {frames.map((frame, i) => (
+                <img
+                    key={i}
+                    src={frame}
+                    width={120}
+                    alt={`Frame ${i + 1}`}
+                />
+            ))}
 
         </div>
 
