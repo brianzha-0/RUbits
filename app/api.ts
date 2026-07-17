@@ -1,5 +1,5 @@
 export async function sendImages(images: string[]): Promise<string> {
-    const response = await fetch("http://localhost:5000/solve", {
+    const response = await fetch("http://localhost:5173/solve", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
