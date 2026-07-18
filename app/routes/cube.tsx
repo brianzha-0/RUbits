@@ -14,7 +14,8 @@ type ColorName =
     | "red"
     | "orange"
     | "blue"
-    | "green";
+    | "green"
+    | "gray";
 
 
 type Face =
@@ -41,12 +42,12 @@ interface CubeState {
 // ----------------------------
 
 const solvedCube: CubeState = {
-    U: Array(9).fill("white"),
-    D: Array(9).fill("yellow"),
-    F: Array(9).fill("green"),
-    B: Array(9).fill("blue"),
-    L: Array(9).fill("orange"),
-    R: Array(9).fill("red"),
+    U: Array(9).fill("gray"),
+    D: Array(9).fill("gray"),
+    F: Array(9).fill("gray"),
+    B: Array(9).fill("gray"),
+    L: Array(9).fill("gray"),
+    R: Array(9).fill("gray"),
 };
 
 
@@ -56,7 +57,8 @@ const colors: Record<ColorName,string> = {
     red:"#ff0000",
     orange:"#ff8800",
     blue:"#0044ff",
-    green:"#00aa00"
+    green:"#00aa00",
+    gray:"#666666"
 };
 
 
@@ -66,28 +68,30 @@ const colors: Record<ColorName,string> = {
 
 function countColors(
     cube:CubeState
-){
-    const counts:any = {};
+):Record<ColorName,number>{
+
+    const counts:Record<ColorName,number> = {
+
+        white:0,
+        yellow:0,
+        red:0,
+        orange:0,
+        blue:0,
+        green:0
+
+    };
+
 
     Object.values(cube)
         .flat()
-        .forEach(c=>{
-            counts[c]=(counts[c]??0)+1;
+        .forEach(color=>{
+
+            counts[color]++;
+
         });
 
+
     return counts;
-}
-
-
-
-function canUseColor(
-    cube:CubeState,
-    color:ColorName
-){
-
-    return (
-        countColors(cube)[color] ?? 0
-    ) < 9;
 
 }
 
@@ -307,50 +311,66 @@ export default function CubePage(){
     const [cube,setCube]=useState<CubeState>(
         solvedCube
     );
-
-
+    
+    
     const [selected,setSelected]=
-        useState<ColorName>("white");
+        useState<ColorName>("red");
 
-
-
-    function updateSticker(
-        face:Face,
-        index:number
-    ){
-
-
-        if(
-            cube[face][index]===selected
-        )
-            return;
-
-
-        if(!canUseColor(cube,selected))
-        {
-            alert(
-                `${selected} already has 9 stickers`
-            );
-            return;
+        function updateSticker(
+            face:Face,
+            index:number
+        ){
+        
+            setCube(prev=>{
+        
+                const oldColor = prev[face][index];
+        
+        
+                // Same color, no change
+                if(oldColor === selected){
+                    return prev;
+                }
+        
+        
+                const counts = countColors(prev);
+        
+                const selectedAmount =
+                    counts[selected] ?? 0;
+        
+        
+        
+                // Only block if we are adding a new sticker
+                // and that color already has 9
+                if(
+                    selectedAmount >= 9
+                    &&
+                    oldColor !== selected
+                ){
+        
+                    alert(
+                        `${selected} already has 9 stickers`
+                    );
+        
+                    return prev;
+                }
+        
+        
+        
+                return {
+        
+                    ...prev,
+        
+                    [face]:
+                        prev[face].map(
+                            (color,i)=>
+                                i===index
+                                ? selected
+                                : color
+                        )
+        
+                };
+            });
         }
-
-
-
-        setCube(prev=>({
-
-            ...prev,
-
-            [face]:
-                prev[face].map(
-                    (x,i)=>
-                    i===index
-                    ? selected
-                    : x
-                )
-
-        }));
-
-    }
 
 
 

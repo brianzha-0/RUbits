@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Test Run</title>
+<title>Solve and See</title>
 
 <style>
 body{
@@ -142,9 +142,19 @@ const mouse=new THREE.Vector2();
 
 const stickers=[];
 
-const cubeGroup=new THREE.Group();
+const tempGroup=new THREE.Group();
+scene.add(tempGroup);
+
+selectedCubies.forEach(c=>{
+
+    tempGroup.attach(c);
+
+});
 
 scene.add(cubeGroup);
+
+tempGroup.rotation.x+=Math.PI/2;
+scene.attach(cubie);
 
 const cubieSize=.95;
 
@@ -235,6 +245,14 @@ counts[old]--;
 counts[currentColor]++;
 
 obj.userData.color=currentColor;
+
+obj.userData.color=currentColor;
+
+cubeState.updateSticker(
+    obj.userData.face,
+    obj.userData.index,
+    currentColor
+);
 
 obj.material.color.set(colors[currentColor]);
 
