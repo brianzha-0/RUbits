@@ -76,6 +76,7 @@ function convertColor(
 
 function blankCube():CubeState{
 
+    
     return {
 
         U:Array(9).fill("white"),

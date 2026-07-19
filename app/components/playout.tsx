@@ -12,6 +12,6 @@
         ↓
     CubeState
         |
-        |
+        | Essentially, multiple algorithms will sequentially provide (a) solution(s) for the cuber!
         ↓
     cube.tsx editor  */
