@@ -4,9 +4,7 @@ import numpy as np
 from color_detection import detect_face
 
 def decode_image(data):
-    encoded = data.split(",")[1]
-    binary = base64.b64decode(encoded)
-    array = np.frombuffer(binary,np.uint8)
+    encoded, binary, array = data.split(",")[1], base64.b64decode(encoded), np.frombuffer(binary,np.uint8)
 
     return cv2.imdecode(array,cv2.IMREAD_COLOR)
 
@@ -14,8 +12,7 @@ def scan_cube(images):
     faces = {}
 
     for image in images:
-        img = decode_image(image)
-        face = detect_face(img)
+        img, face = decode_image(image), detect_face(img)
 
         if face is None:
             continue

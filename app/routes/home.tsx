@@ -4,7 +4,7 @@ import { Welcome } from "../welcome/welcome";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "RUbit's" },
-    { name: "description", content: "Getting Out Of Scrambles Easier" },
+    { name: "description", content: "Get Out Of Scrambles Easily" },
   ];
 }
 
