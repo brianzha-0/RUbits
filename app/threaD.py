@@ -26,8 +26,7 @@ def scan_cube(images):
     return build_cube_string(faces)
 
 def build_cube_string(faces):
-    order = ["U","R","F","D","L","B"]
-    cube = ""
+    order, cube = ["U","R","F","D","L","B"], ""
 
     for f in order:
         cube += "".join(faces[f])

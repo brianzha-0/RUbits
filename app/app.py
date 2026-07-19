@@ -9,6 +9,7 @@ def solve():
     images = request.json["images"]
     cube_string = scan_cube(images)
     solution = solve_cube(cube_string)
+    
     return jsonify({
         "cube":cube_string,
         "solution":solution
