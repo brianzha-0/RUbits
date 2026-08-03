@@ -6,3 +6,4 @@ Rubik's cubing sidekick
 Provisional Screenshares of the Programs' Structure
 ![provisional provisual tab](public/workingprogress.png)
 ![sticker picker tab inner-workings](public/conventionalcolourchanges.png)
+![top, side-to-side and all other face(t)s](public/sparse.png)

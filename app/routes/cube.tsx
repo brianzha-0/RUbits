@@ -304,7 +304,32 @@ function Cube3D(
 // ----------------------------
 // Route
 // ----------------------------
+function cubeToString(cube: CubeState): string {
 
+    const map: Record<ColorName, string> = {
+        white: "W",
+        yellow: "Y",
+        red: "R",
+        orange: "O",
+        blue: "B",
+        green: "G",
+        gray: "X"
+    };
+
+    const order: Face[] = [
+        "U",
+        "R",
+        "F",
+        "D",
+        "L",
+        "B"
+    ];
+
+    return order
+        .flatMap(face => cube[face])
+        .map(color => map[color])
+        .join("");
+}
 
 export default function CubePage(){
 
@@ -356,19 +381,25 @@ export default function CubePage(){
         
         
         
-                return {
-        
+                const newCube: CubeState = {
+
                     ...prev,
-        
+                
                     [face]:
                         prev[face].map(
-                            (color,i)=>
-                                i===index
-                                ? selected
-                                : color
+                            (color, i) =>
+                                i === index
+                                    ? selected
+                                    : color
                         )
-        
+                
                 };
+                
+                const cubeString = cubeToString(newCube);
+                
+                console.log(cubeString);
+                
+                return newCube;
             });
         }
 
@@ -472,13 +503,7 @@ export default function CubePage(){
                     }}
                 >
 
-                    {
-                        JSON.stringify(
-                            cube,
-                            null,
-                            2
-                        )
-                    }
+                    {cubeToString(cube)}
 
                 </pre>
 
