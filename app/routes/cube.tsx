@@ -458,9 +458,9 @@ export default function CubePage(){
             >
 
 
-                <h3>
+                <h1>
                     Colors
-                </h3>
+                </h1>
 
 
                 {
@@ -489,9 +489,9 @@ export default function CubePage(){
                 }
 
 
-                <h3>
+                <h1>
                     Cube Data
-                </h3>
+                </h1>
 
 
                 <pre
