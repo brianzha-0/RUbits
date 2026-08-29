@@ -3,11 +3,6 @@ import { OrbitControls } from "@react-three/drei";
 import { useState } from "react";
 import type { Route } from "./+types/cube";
 
-
-// ----------------------------
-// Types
-// ----------------------------
-
 type ColorName =
     | "white"
     | "yellow"
@@ -17,7 +12,6 @@ type ColorName =
     | "green"
     | "gray";
 
-
 type Face =
     | "U"
     | "D"
@@ -25,7 +19,6 @@ type Face =
     | "B"
     | "L"
     | "R";
-
 
 interface CubeState {
     U: ColorName[];
@@ -36,11 +29,6 @@ interface CubeState {
     R: ColorName[];
 }
 
-
-// ----------------------------
-// Default solved cube
-// ----------------------------
-
 const solvedCube: CubeState = {
     U: Array(9).fill("gray"),
     D: Array(9).fill("gray"),
@@ -49,7 +37,6 @@ const solvedCube: CubeState = {
     L: Array(9).fill("gray"),
     R: Array(9).fill("gray"),
 };
-
 
 const colors: Record<ColorName,string> = {
     white:"#ffffff",
@@ -61,45 +48,27 @@ const colors: Record<ColorName,string> = {
     gray:"#666666"
 };
 
-
-// ----------------------------
-// Utility
-// ----------------------------
-
 function countColors(
     cube:CubeState
 ):Record<ColorName,number>{
 
     const counts:Record<ColorName,number> = {
-
         white:0,
         yellow:0,
         red:0,
         orange:0,
         blue:0,
         green:0
-
     };
-
 
     Object.values(cube)
         .flat()
         .forEach(color=>{
-
             counts[color]++;
-
         });
 
-
     return counts;
-
 }
-
-
-
-// ----------------------------
-// Sticker component
-// ----------------------------
 
 function Sticker(
 {
@@ -115,31 +84,18 @@ function Sticker(
 }){
 
     return (
-
         <mesh
             position={position}
             rotation={rotation}
             onClick={onClick}
         >
-
             <planeGeometry args={[0.28,0.28]}/>
-
             <meshStandardMaterial
                 color={colors[color]}
             />
-
         </mesh>
-
     );
 }
-
-
-
-
-// ----------------------------
-// Cube face creator
-// ----------------------------
-
 
 function FaceGrid(
 {
@@ -152,9 +108,7 @@ function FaceGrid(
     update:(f:Face,i:number)=>void
 }){
 
-
     const stickers=[];
-
 
     for(let row=0;row<3;row++){
 
@@ -167,14 +121,10 @@ function FaceGrid(
             let rotation:[number,number,number]=
                 [0,0,0];
 
-
             const spacing=0.31;
-
 
             const a=(col-1)*spacing;
             const b=(1-row)*spacing;
-
-
 
             switch(face){
 
@@ -184,14 +134,12 @@ function FaceGrid(
                     z=0.5;
                     break;
 
-
                 case "B":
                     x=-a;
                     y=b;
                     z=-0.5;
                     rotation=[0,Math.PI,0];
                     break;
-
 
                 case "U":
                     x=a;
@@ -200,7 +148,6 @@ function FaceGrid(
                     rotation=[-Math.PI/2,0,0];
                     break;
 
-
                 case "D":
                     x=a;
                     y=-0.5;
@@ -208,14 +155,12 @@ function FaceGrid(
                     rotation=[Math.PI/2,0,0];
                     break;
 
-
                 case "L":
                     x=-0.5;
                     y=b;
                     z=-a;
                     rotation=[0,-Math.PI/2,0];
                     break;
-
 
                 case "R":
                     x=0.5;
@@ -225,10 +170,7 @@ function FaceGrid(
                     break;
             }
 
-
-
             stickers.push(
-
                 <Sticker
                     key={`${face}-${row}-${col}`}
                     position={[x,y,z]}
@@ -238,22 +180,12 @@ function FaceGrid(
                         update(face,row*3+col)
                     }
                 />
-
             );
-
         }
     }
 
-
     return stickers;
-
 }
-
-
-
-// ----------------------------
-// 3D Cube
-// ----------------------------
 
 function Cube3D(
 {
@@ -264,11 +196,8 @@ function Cube3D(
     update:(f:Face,i:number)=>void
 }){
 
-
     return (
-
         <group>
-
             {
                 (
                     [
@@ -281,29 +210,18 @@ function Cube3D(
                     ] as Face[]
                 )
                 .map(face=>(
-
                     <FaceGrid
                         key={face}
                         face={face}
                         cube={cube}
                         update={update}
                     />
-
                 ))
             }
-
-
         </group>
-
     );
-
 }
 
-
-
-// ----------------------------
-// Route
-// ----------------------------
 function cubeToString(cube: CubeState): string {
 
     const map: Record<ColorName, string> = {
@@ -336,74 +254,133 @@ export default function CubePage(){
     const [cube,setCube]=useState<CubeState>(
         solvedCube
     );
-    
-    
+
     const [selected,setSelected]=
         useState<ColorName>("red");
 
-        function updateSticker(
-            face:Face,
-            index:number
-        ){
-        
-            setCube(prev=>{
-        
-                const oldColor = prev[face][index];
-        
-        
-                // Same color, no change
-                if(oldColor === selected){
-                    return prev;
-                }
-        
-        
-                const counts = countColors(prev);
-        
-                const selectedAmount =
-                    counts[selected] ?? 0;
-        
-        
-        
-                // Only block if we are adding a new sticker
-                // and that color already has 9
-                if(
-                    selectedAmount >= 9
-                    &&
-                    oldColor !== selected
-                ){
-        
-                    alert(
-                        `${selected} already has 9 stickers`
-                    );
-        
-                    return prev;
-                }
-        
-        
-        
-                const newCube: CubeState = {
+    const [solution,setSolution]=
+        useState("");
 
-                    ...prev,
-                
-                    [face]:
-                        prev[face].map(
-                            (color, i) =>
-                                i === index
-                                    ? selected
-                                    : color
-                        )
-                
-                };
-                
-                const cubeString = cubeToString(newCube);
-                
-                console.log(cubeString);
-                
-                return newCube;
-            });
+    const [solving,setSolving]=
+        useState(false);
+
+    const [solveError,setSolveError]=
+        useState("");
+
+    function updateSticker(
+        face:Face,
+        index:number
+    ){
+
+        setCube(prev=>{
+
+            const oldColor = prev[face][index];
+
+            if(oldColor === selected){
+                return prev;
+            }
+
+            const counts = countColors(prev);
+
+            const selectedAmount =
+                counts[selected] ?? 0;
+
+            if(
+                selectedAmount >= 9
+                &&
+                oldColor !== selected
+            ){
+
+                alert(
+                    `${selected} already has 9 stickers`
+                );
+
+                return prev;
+            }
+
+            const newCube: CubeState = {
+
+                ...prev,
+
+                [face]:
+                    prev[face].map(
+                        (color, i) =>
+                            i === index
+                                ? selected
+                                : color
+                    )
+
+            };
+
+            const cubeString = cubeToString(newCube);
+
+            console.log(cubeString);
+
+            return newCube;
+        });
+    }
+
+    async function solveCube() {
+
+        const cubeString = cubeToString(cube);
+
+        if (cubeString.includes("X")) {
+
+            setSolveError(
+                "Finish coloring all 54 stickers before solving."
+            );
+
+            return;
         }
 
+        setSolving(true);
+        setSolveError("");
+        setSolution("");
 
+        try {
+
+            const response = await fetch(
+                "/api/solve-cube",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        cubeString
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Failed to solve cube."
+                );
+
+            }
+
+            setSolution(data.solution);
+
+        } catch (error) {
+
+            console.error(error);
+
+            setSolveError(
+                error instanceof Error
+                    ? error.message
+                    : "Failed to solve cube."
+            );
+
+        } finally {
+
+            setSolving(false);
+
+        }
+    }
 
     return (
 
@@ -415,7 +392,6 @@ export default function CubePage(){
                 color:"white"
             }}
         >
-
 
             <Canvas
                 camera={{
@@ -433,18 +409,14 @@ export default function CubePage(){
                     position={[3,3,3]}
                 />
 
-
                 <Cube3D
                     cube={cube}
                     update={updateSticker}
                 />
 
-
                 <OrbitControls/>
 
             </Canvas>
-
-
 
             <div
                 style={{
@@ -457,11 +429,9 @@ export default function CubePage(){
                 }}
             >
 
-
                 <h1>
                     Colors
                 </h1>
-
 
                 {
                     Object.keys(colors).map((c) => {
@@ -488,11 +458,9 @@ export default function CubePage(){
                     })
                 }
 
-
                 <h1>
                     Cube Data
                 </h1>
-
 
                 <pre
                     style={{
@@ -502,14 +470,71 @@ export default function CubePage(){
                         overflow:"auto"
                     }}
                 >
-
                     {cubeToString(cube)}
-
                 </pre>
 
+                <button
+                    onClick={solveCube}
+                    disabled={solving}
+                    style={{
+                        marginTop: 10,
+                        width: "100%",
+                        padding: "10px",
+                        border: "none",
+                        borderRadius: 6,
+                        cursor: solving ? "wait" : "pointer",
+                        background: solving ? "#555" : "#ffffff",
+                        color: "#000",
+                        fontWeight: "bold"
+                    }}
+                >
+                    {solving ? "Solving..." : "Solve Cube"}
+                </button>
+
+                {solution && (
+                    <div
+                        style={{
+                            marginTop: 10,
+                            padding: 10,
+                            background: "#111",
+                            borderRadius: 6
+                        }}
+                    >
+                        <div
+                            style={{
+                                fontSize: 12,
+                                color: "#aaa",
+                                marginBottom: 5
+                            }}
+                        >
+                            Solution
+                        </div>
+
+                        <div
+                            style={{
+                                fontFamily: "monospace",
+                                fontSize: 16,
+                                wordBreak: "break-word"
+                            }}
+                        >
+                            {solution}
+                        </div>
+                    </div>
+                )}
+
+                {solveError && (
+                    <div
+                        style={{
+                            marginTop: 10,
+                            color: "#ff6666",
+                            fontSize: 12
+                        }}
+                    >
+                        {solveError}
+                    </div>
+                )}
 
             </div>
-
 
         </div>
 
