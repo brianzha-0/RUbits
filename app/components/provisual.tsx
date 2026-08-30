@@ -310,56 +310,274 @@ export default function Scanner(){
 
     return (
 
-        <div>
+        <div
+            style={{
+                minHeight: "100vh",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "60px 24px",
+                boxSizing: "border-box",
+                background:
+                    "radial-gradient(circle at 50% 0%, #252525 0%, #111 45%, #070707 100%)",
+                color: "white",
+                fontFamily: "Inter, system-ui, sans-serif"
+            }}
+        >
 
-            <h1>
-                Rubik's Cube Scanner
-            </h1>
-
-
-            <Webcam
-
-                ref={webcamRef}
-
-                screenshotFormat="image/jpeg"
-
-                videoConstraints={{
-                    facingMode:"environment"
+            <div
+                style={{
+                    width: "100%",
+                    maxWidth: "900px",
+                    textAlign: "center"
                 }}
-
-            />
-
-
-            <button
-                onClick={capture}
             >
-                Scan Cube
-            </button>
+
+                <div
+                    style={{
+                        display: "inline-block",
+                        padding: "6px 14px",
+                        marginBottom: "18px",
+                        border: "1px solid #333",
+                        borderRadius: "999px",
+                        background: "#151515",
+                        color: "#888",
+                        fontSize: "11px",
+                        fontWeight: "600",
+                        letterSpacing: "2px",
+                        textTransform: "uppercase"
+                    }}
+                >
+                    RUbit's Vision
+                </div>
+
+                <h1
+                    style={{
+                        margin: "0",
+                        fontSize: "clamp(40px, 6vw, 64px)",
+                        lineHeight: "1.05",
+                        fontWeight: "800",
+                        letterSpacing: "-2px"
+                    }}
+                >
+                    Rubik's Cube
+                    <br />
+                    <span style={{ color: "#666" }}>
+                        Scanner
+                    </span>
+                </h1>
+
+                <p
+                    style={{
+                        margin: "20px auto 40px",
+                        maxWidth: "560px",
+                        color: "#888",
+                        fontSize: "16px",
+                        lineHeight: "1.7"
+                    }}
+                >
+                    Position your cube in front of the camera and
+                    let RUbit's analyze its colors and orientation.
+                </p>
 
 
-            {
-                cube &&
-                <pre>
+                <div
+                    style={{
+                        position: "relative",
+                        width: "100%",
+                        maxWidth: "720px",
+                        margin: "0 auto",
+                        padding: "8px",
+                        borderRadius: "20px",
+                        background: "#151515",
+                        border: "1px solid #303030",
+                        boxShadow: "0 30px 80px rgba(0,0,0,0.45)",
+                        boxSizing: "border-box"
+                    }}
+                >
 
-                    {
-                        JSON.stringify(
-                            cube,
-                            null,
-                            2
-                        )
-                    }
+                    <div
+                        style={{
+                            position: "relative",
+                            overflow: "hidden",
+                            borderRadius: "14px",
+                            background: "#050505"
+                        }}
+                    >
 
-                </pre>
-            }
+                        <Webcam
+                            ref={webcamRef}
+                            screenshotFormat="image/jpeg"
+                            videoConstraints={{
+                                facingMode:"environment"
+                            }}
+                            style={{
+                                display: "block",
+                                width: "100%",
+                                aspectRatio: "16 / 10",
+                                objectFit: "cover"
+                            }}
+                        />
 
-            {frames.map((frame, i) => (
-                <img
-                    key={i}
-                    src={frame}
-                    width={120}
-                    alt={`Frame ${i + 1}`}
-                />
-            ))}
+                        <div
+                            style={{
+                                position: "absolute",
+                                inset: "25px",
+                                border: "1px solid rgba(255,255,255,0.3)",
+                                borderRadius: "10px",
+                                pointerEvents: "none"
+                            }}
+                        />
+
+                        <div
+                            style={{
+                                position: "absolute",
+                                top: "18px",
+                                left: "20px",
+                                padding: "5px 9px",
+                                borderRadius: "5px",
+                                background: "rgba(0,0,0,0.65)",
+                                color: "#aaa",
+                                fontSize: "10px",
+                                letterSpacing: "1.5px"
+                            }}
+                        >
+                            CAMERA ACTIVE
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    onClick={capture}
+                    style={{
+                        marginTop: "24px",
+                        padding: "14px 42px",
+                        border: "none",
+                        borderRadius: "10px",
+                        background: "#fff",
+                        color: "#111",
+                        fontSize: "15px",
+                        fontWeight: "700",
+                        cursor: "pointer",
+                        boxShadow: "0 10px 30px rgba(255,255,255,0.08)"
+                    }}
+                >
+                    Scan Cube
+                </button>
+
+
+                {
+                    cube &&
+                    <div
+                        style={{
+                            width: "100%",
+                            maxWidth: "720px",
+                            margin: "35px auto 0",
+                            padding: "20px",
+                            boxSizing: "border-box",
+                            textAlign: "left",
+                            borderRadius: "14px",
+                            background: "#111",
+                            border: "1px solid #292929"
+                        }}
+                    >
+
+                        <div
+                            style={{
+                                marginBottom: "10px",
+                                color: "#666",
+                                fontSize: "11px",
+                                fontWeight: "600",
+                                letterSpacing: "1.5px",
+                                textTransform: "uppercase"
+                            }}
+                        >
+                            Detected Cube
+                        </div>
+
+                        <pre
+                            style={{
+                                margin: 0,
+                                padding: "15px",
+                                overflow: "auto",
+                                borderRadius: "8px",
+                                background: "#080808",
+                                color: "#aaa",
+                                fontSize: "12px",
+                                lineHeight: "1.6"
+                            }}
+                        >
+                            {
+                                JSON.stringify(
+                                    cube,
+                                    null,
+                                    2
+                                )
+                            }
+                        </pre>
+
+                    </div>
+                }
+
+
+                {frames.length > 0 && (
+                    <div
+                        style={{
+                            width: "100%",
+                            maxWidth: "720px",
+                            margin: "30px auto 0",
+                            textAlign: "left"
+                        }}
+                    >
+
+                        <div
+                            style={{
+                                marginBottom: "12px",
+                                color: "#666",
+                                fontSize: "11px",
+                                fontWeight: "600",
+                                letterSpacing: "1.5px",
+                                textTransform: "uppercase"
+                            }}
+                        >
+                            Captured Frames
+                        </div>
+
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns:
+                                    "repeat(auto-fill, minmax(120px, 1fr))",
+                                gap: "10px"
+                            }}
+                        >
+
+                            {frames.map((frame, i) => (
+                                <img
+                                    key={i}
+                                    src={frame}
+                                    width={120}
+                                    alt={`Frame ${i + 1}`}
+                                    style={{
+                                        width: "100%",
+                                        aspectRatio: "1",
+                                        objectFit: "cover",
+                                        borderRadius: "8px",
+                                        border: "1px solid #292929"
+                                    }}
+                                />
+                            ))}
+
+                        </div>
+
+                    </div>
+                )}
+
+            </div>
 
         </div>
 
