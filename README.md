@@ -27,3 +27,4 @@ Examples of processes to take include but are not nearly limited to:
 Kociemba, CFOP, ZBLL, and differing parities when concerning the groupings of same color panels.
 
 For faster solving times, consider optimizing the wide range of waypaths that you may take to arrive at a completed puzzle formation. For more information, see official handbooks for both handy and restrictive methodologies to have fun with an age-old yet timeless creation!
+![constant optimizations constantly optimize JSON data sent file-to-file instead of utilising an intermediary medium such as the API attempted to be employed optically, optifying downtime cases](public/freediementions.png)

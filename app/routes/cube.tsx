@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useState } from "react";
+import { normalizeCube } from "./api.solve-cube";
 
 type ColorName =
     | "white"
@@ -296,9 +297,6 @@ export default function CubePage() {
     const [solution, setSolution] =
         useState("");
 
-    const [normalizedCube, setNormalizedCube] =
-        useState("");
-
     const [solving, setSolving] =
         useState(false);
 
@@ -365,9 +363,18 @@ export default function CubePage() {
         setSolving(true);
         setSolveError("");
         setSolution("");
-        setNormalizedCube("");
 
         try {
+
+            const normalizedCube =
+                normalizeCube(
+                    cubeString
+                );
+
+            console.log(
+                "Normalized cube:",
+                normalizedCube
+            );
 
             const response =
                 await fetch(
@@ -376,8 +383,6 @@ export default function CubePage() {
                         method: "POST",
                         headers: {
                             "Content-Type":
-                                "application/json",
-                            "Accept":
                                 "application/json"
                         },
                         body: JSON.stringify({
@@ -386,28 +391,8 @@ export default function CubePage() {
                     }
                 );
 
-            const text =
-                await response.text();
-
-            let result: {
-                solution?: string;
-                normalizedCube?: string;
-                message?: string;
-                error?: string;
-            };
-
-            try {
-
-                result =
-                    JSON.parse(text);
-
-            } catch {
-
-                throw new Error(
-                    text ||
-                    "API returned an invalid response."
-                );
-            }
+            const result =
+                await response.json();
 
             if (!response.ok) {
 
@@ -416,10 +401,6 @@ export default function CubePage() {
                     "Failed to get cube solution."
                 );
             }
-
-            setNormalizedCube(
-                result.normalizedCube || ""
-            );
 
             setSolution(
                 result.solution || ""
@@ -443,6 +424,11 @@ export default function CubePage() {
 
     const cubeString =
         cubeToString(cube);
+
+    const normalizedCube =
+        cubeString.includes("X")
+            ? ""
+            : normalizeCube(cubeString);
 
     return (
         <div
@@ -575,7 +561,7 @@ export default function CubePage() {
                         wordBreak: "break-all"
                     }}
                 >
-                    {normalizedCube || "Not normalized yet"}
+                    {normalizedCube}
                 </pre>
 
                 <button

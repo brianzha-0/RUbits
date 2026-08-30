@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs } from "react-router";
 import Cube from "cubejs";
+import type { ActionFunctionArgs } from "react-router";
 
 Cube.initSolver();
 
@@ -11,16 +11,7 @@ type Face =
     | "L"
     | "B";
 
-const VALID_COLORS = new Set([
-    "W",
-    "Y",
-    "R",
-    "O",
-    "B",
-    "G"
-]);
-
-function normalizeCube(
+export function normalizeCube(
     cubeString: string
 ): string {
 
@@ -106,105 +97,10 @@ export async function action({
             );
         }
 
-        if (
-            cubeString.length !== 54
-        ) {
-            return new Response(
-                JSON.stringify({
-                    error:
-                        `Invalid cube string length: ${cubeString.length}. Expected 54.`
-                }),
-                {
-                    status: 400,
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    }
-                }
-            );
-        }
-
-        if (
-            !/^[WYROBG]+$/.test(
+        const normalizedCube =
+            normalizeCube(
                 cubeString
-            )
-        ) {
-            return new Response(
-                JSON.stringify({
-                    error:
-                        "Cube string contains invalid characters."
-                }),
-                {
-                    status: 400,
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    }
-                }
             );
-        }
-
-        const counts: Record<
-            string,
-            number
-        > = {};
-
-        for (
-            const color of cubeString
-        ) {
-            counts[color] =
-                (counts[color] || 0) + 1;
-        }
-
-        for (
-            const color of VALID_COLORS
-        ) {
-            if (
-                counts[color] !== 9
-            ) {
-                return new Response(
-                    JSON.stringify({
-                        error:
-                            `Invalid cube: ${color} has ${counts[color] || 0} stickers.`
-                    }),
-                    {
-                        status: 400,
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        }
-                    }
-                );
-            }
-        }
-
-        let normalizedCube: string;
-
-        try {
-
-            normalizedCube =
-                normalizeCube(
-                    cubeString
-                );
-
-        } catch (error) {
-
-            return new Response(
-                JSON.stringify({
-                    error:
-                        error instanceof Error
-                            ? error.message
-                            : "Invalid cube orientation."
-                }),
-                {
-                    status: 400,
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    }
-                }
-            );
-        }
 
         console.log(
             "Original cube:",
@@ -225,18 +121,12 @@ export async function action({
                     normalizedCube
                 );
 
-        } catch (error) {
-
-            console.error(
-                "Cube parsing error:",
-                error
-            );
+        } catch {
 
             return new Response(
                 JSON.stringify({
                     error:
-                        "This is not a physically valid Rubik's Cube state.",
-                    normalizedCube
+                        "This is not a physically valid Rubik's Cube state."
                 }),
                 {
                     status: 400,
@@ -266,38 +156,8 @@ export async function action({
             );
         }
 
-        let solution: string;
-
-        try {
-
-            solution =
-                cube.solve();
-
-        } catch (error) {
-
-            console.error(
-                "Cube solving error:",
-                error
-            );
-
-            return new Response(
-                JSON.stringify({
-                    error:
-                        "Unable to solve this cube state.",
-                    normalizedCube
-                }),
-                {
-                    status: 500,
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    }
-                }
-            );
-        }
-
-        solution =
-            solution
+        const solution =
+            cube.solve()
                 .trim()
                 .replace(/\s+/g, " ");
 
@@ -305,9 +165,8 @@ export async function action({
             JSON.stringify({
                 solution,
                 normalizedCube,
-                message: solution
-                    ? `Solution: ${solution}`
-                    : "Already solved!"
+                message:
+                    `Solution: ${solution}`
             }),
             {
                 status: 200,
@@ -319,11 +178,6 @@ export async function action({
         );
 
     } catch (error) {
-
-        console.error(
-            "Unexpected API error:",
-            error
-        );
 
         return new Response(
             JSON.stringify({
