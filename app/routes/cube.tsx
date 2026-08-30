@@ -296,6 +296,9 @@ export default function CubePage() {
     const [solution, setSolution] =
         useState("");
 
+    const [normalizedCube, setNormalizedCube] =
+        useState("");
+
     const [solving, setSolving] =
         useState(false);
 
@@ -362,6 +365,7 @@ export default function CubePage() {
         setSolving(true);
         setSolveError("");
         setSolution("");
+        setNormalizedCube("");
 
         try {
 
@@ -374,7 +378,7 @@ export default function CubePage() {
                             "Content-Type":
                                 "application/json",
                             "Accept":
-                                "text/plain"
+                                "application/json"
                         },
                         body: JSON.stringify({
                             cubeString
@@ -382,32 +386,43 @@ export default function CubePage() {
                     }
                 );
 
-            const result =
+            const text =
                 await response.text();
+
+            let result: {
+                solution?: string;
+                normalizedCube?: string;
+                message?: string;
+                error?: string;
+            };
+
+            try {
+
+                result =
+                    JSON.parse(text);
+
+            } catch {
+
+                throw new Error(
+                    text ||
+                    "API returned an invalid response."
+                );
+            }
 
             if (!response.ok) {
 
-                let errorMessage =
-                    result;
-
-                try {
-                    const json =
-                        JSON.parse(result);
-
-                    errorMessage =
-                        json.error ||
-                        result;
-                } catch {
-                }
-
                 throw new Error(
-                    errorMessage ||
+                    result.error ||
                     "Failed to get cube solution."
                 );
             }
 
+            setNormalizedCube(
+                result.normalizedCube || ""
+            );
+
             setSolution(
-                result.trim()
+                result.solution || ""
             );
 
         } catch (error) {
@@ -544,6 +559,23 @@ export default function CubePage() {
                     }}
                 >
                     {cubeString}
+                </pre>
+
+                <h2>
+                    Normalized Cube
+                </h2>
+
+                <pre
+                    style={{
+                        fontSize: 10,
+                        maxWidth: 250,
+                        maxHeight: 100,
+                        overflow: "auto",
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-all"
+                    }}
+                >
+                    {normalizedCube || "Not normalized yet"}
                 </pre>
 
                 <button

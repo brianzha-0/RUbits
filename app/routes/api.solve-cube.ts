@@ -235,7 +235,8 @@ export async function action({
             return new Response(
                 JSON.stringify({
                     error:
-                        "This is not a physically valid Rubik's Cube state."
+                        "This is not a physically valid Rubik's Cube state.",
+                    normalizedCube
                 }),
                 {
                     status: 400,
@@ -252,6 +253,7 @@ export async function action({
             return new Response(
                 JSON.stringify({
                     solution: "",
+                    normalizedCube,
                     message: "Already solved!"
                 }),
                 {
@@ -281,7 +283,8 @@ export async function action({
             return new Response(
                 JSON.stringify({
                     error:
-                        "Unable to solve this cube state."
+                        "Unable to solve this cube state.",
+                    normalizedCube
                 }),
                 {
                     status: 500,
@@ -301,6 +304,7 @@ export async function action({
         return new Response(
             JSON.stringify({
                 solution,
+                normalizedCube,
                 message: solution
                     ? `Solution: ${solution}`
                     : "Already solved!"
