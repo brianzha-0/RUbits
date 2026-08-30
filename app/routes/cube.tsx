@@ -499,7 +499,8 @@ export default function CubePage() {
                             "red",
                             "orange",
                             "blue",
-                            "green"
+                            "green",
+                            "gray"
                         ] as ColorName[]
                     ).map(color => (
 

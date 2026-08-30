@@ -5,7 +5,7 @@ Rubik's cubing sidekick
 ![solving more like slowing](public/slowash.png)
 ![provisional provisual tab](public/workingprogress.png)
 ![sticker picker tab inner-workings](public/conventionalcolourchanges.png)
-
+![hopecore more less topples higher on top please](public/hopemore.png)
 ![top, side-to-side and all other face(t)s](public/sparse.png)
 ![scrambled eggs ample](public/scrambledeggsample.webp)
 
@@ -19,8 +19,7 @@ Click Open Cube Editor and a customary large language model utilising its traini
 
 Format the cube with the physical orientations and state of the physical item that you may or may not own but will soon get two
 if you become fascinated by the many facets of different cube configurations and ways to make it how said item was when it first came in its see-through packaging.
-
-Press Solve and wait for a response from the pertaining training model
+- Press Solve and wait for a response from the pertaining training model
 
 Once finished, solve the cube following the instructions outputed onto the UI and augment the overall UX with CI/CD implications I guess.
 
