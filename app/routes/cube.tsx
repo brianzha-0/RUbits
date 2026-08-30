@@ -297,6 +297,9 @@ export default function CubePage() {
     const [solution, setSolution] =
         useState("");
 
+    const [normalizedCube, setNormalizedCube] =
+        useState("");
+
     const [solving, setSolving] =
         useState(false);
 
@@ -363,6 +366,7 @@ export default function CubePage() {
         setSolving(true);
         setSolveError("");
         setSolution("");
+        setNormalizedCube("");
 
         try {
 
@@ -371,8 +375,7 @@ export default function CubePage() {
                     cubeString
                 );
 
-            console.log(
-                "Normalized cube:",
+            setNormalizedCube(
                 normalizedCube
             );
 
@@ -424,11 +427,6 @@ export default function CubePage() {
 
     const cubeString =
         cubeToString(cube);
-
-    const normalizedCube =
-        cubeString.includes("X")
-            ? ""
-            : normalizeCube(cubeString);
 
     return (
         <div
@@ -561,7 +559,7 @@ export default function CubePage() {
                         wordBreak: "break-all"
                     }}
                 >
-                    {normalizedCube}
+                    {normalizedCube || "Not normalized yet"}
                 </pre>
 
                 <button
