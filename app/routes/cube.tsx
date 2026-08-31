@@ -20,6 +20,8 @@ type Face =
     | "L"
     | "R";
 
+type CubeSize = 3 | 4;
+
 interface CubeState {
     U: ColorName[];
     D: ColorName[];
@@ -28,15 +30,6 @@ interface CubeState {
     L: ColorName[];
     R: ColorName[];
 }
-
-const solvedCube: CubeState = {
-    U: Array(9).fill("gray"),
-    D: Array(9).fill("gray"),
-    F: Array(9).fill("gray"),
-    B: Array(9).fill("gray"),
-    L: Array(9).fill("gray"),
-    R: Array(9).fill("gray"),
-};
 
 const colors: Record<ColorName, string> = {
     white: "#ffffff",
@@ -47,6 +40,20 @@ const colors: Record<ColorName, string> = {
     green: "#00aa00",
     gray: "#666666"
 };
+
+function createSolvedCube(size: CubeSize): CubeState {
+
+    const stickers = size * size;
+
+    return {
+        U: Array(stickers).fill("gray"),
+        D: Array(stickers).fill("gray"),
+        F: Array(stickers).fill("gray"),
+        B: Array(stickers).fill("gray"),
+        L: Array(stickers).fill("gray"),
+        R: Array(stickers).fill("gray")
+    };
+}
 
 function countColors(
     cube: CubeState
@@ -75,11 +82,13 @@ function Sticker({
     position,
     rotation,
     color,
+    size,
     onClick
 }: {
     position: [number, number, number];
     rotation: [number, number, number];
     color: ColorName;
+    size: number;
     onClick: () => void;
 }) {
 
@@ -89,7 +98,7 @@ function Sticker({
             rotation={rotation}
             onClick={onClick}
         >
-            <planeGeometry args={[0.28, 0.28]} />
+            <planeGeometry args={[size, size]} />
 
             <meshStandardMaterial
                 color={colors[color]}
@@ -101,18 +110,44 @@ function Sticker({
 function FaceGrid({
     face,
     cube,
-    update
+    update,
+    dimension
 }: {
     face: Face;
     cube: CubeState;
     update: (face: Face, index: number) => void;
+    dimension: CubeSize;
 }) {
 
     const stickers = [];
 
-    for (let row = 0; row < 3; row++) {
+    const spacing =
+        dimension === 3
+            ? 0.31
+            : 0.235;
 
-        for (let col = 0; col < 3; col++) {
+    const stickerSize =
+        dimension === 3
+            ? 0.28
+            : 0.21;
+
+    const faceSize =
+        spacing * dimension;
+
+    const start =
+        (dimension - 1) / 2;
+
+    for (
+        let row = 0;
+        row < dimension;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < dimension;
+            col++
+        ) {
 
             let x = 0;
             let y = 0;
@@ -124,26 +159,24 @@ function FaceGrid({
                 number
             ] = [0, 0, 0];
 
-            const spacing = 0.31;
-
             const a =
-                (col - 1) * spacing;
+                (col - start) * spacing;
 
             const b =
-                (1 - row) * spacing;
+                (start - row) * spacing;
 
             switch (face) {
 
                 case "F":
                     x = a;
                     y = b;
-                    z = 0.5;
+                    z = faceSize / 2;
                     break;
 
                 case "B":
                     x = -a;
                     y = b;
-                    z = -0.5;
+                    z = -faceSize / 2;
                     rotation = [
                         0,
                         Math.PI,
@@ -153,7 +186,7 @@ function FaceGrid({
 
                 case "U":
                     x = a;
-                    y = 0.5;
+                    y = faceSize / 2;
                     z = b;
                     rotation = [
                         -Math.PI / 2,
@@ -164,7 +197,7 @@ function FaceGrid({
 
                 case "D":
                     x = a;
-                    y = -0.5;
+                    y = -faceSize / 2;
                     z = -b;
                     rotation = [
                         Math.PI / 2,
@@ -174,7 +207,7 @@ function FaceGrid({
                     break;
 
                 case "L":
-                    x = -0.5;
+                    x = -faceSize / 2;
                     y = b;
                     z = -a;
                     rotation = [
@@ -185,7 +218,7 @@ function FaceGrid({
                     break;
 
                 case "R":
-                    x = 0.5;
+                    x = faceSize / 2;
                     y = b;
                     z = a;
                     rotation = [
@@ -196,18 +229,20 @@ function FaceGrid({
                     break;
             }
 
+            const index =
+                row * dimension + col;
+
             stickers.push(
                 <Sticker
                     key={`${face}-${row}-${col}`}
                     position={[x, y, z]}
                     rotation={rotation}
-                    color={
-                        cube[face][row * 3 + col]
-                    }
+                    color={cube[face][index]}
+                    size={stickerSize}
                     onClick={() =>
                         update(
                             face,
-                            row * 3 + col
+                            index
                         )
                     }
                 />
@@ -220,13 +255,15 @@ function FaceGrid({
 
 function Cube3D({
     cube,
-    update
+    update,
+    dimension
 }: {
     cube: CubeState;
     update: (
         face: Face,
         index: number
     ) => void;
+    dimension: CubeSize;
 }) {
 
     const faces: Face[] = [
@@ -246,6 +283,7 @@ function Cube3D({
                     face={face}
                     cube={cube}
                     update={update}
+                    dimension={dimension}
                 />
             ))}
         </group>
@@ -286,9 +324,12 @@ function cubeToString(
 
 export default function CubePage() {
 
+    const [dimension, setDimension] =
+        useState<CubeSize>(3);
+
     const [cube, setCube] =
         useState<CubeState>(
-            solvedCube
+            createSolvedCube(3)
         );
 
     const [selected, setSelected] =
@@ -305,6 +346,21 @@ export default function CubePage() {
 
     const [solveError, setSolveError] =
         useState("");
+
+    function changeDimension(
+        newDimension: CubeSize
+    ) {
+
+        setDimension(newDimension);
+
+        setCube(
+            createSolvedCube(newDimension)
+        );
+
+        setSolution("");
+        setNormalizedCube("");
+        setSolveError("");
+    }
 
     function updateSticker(
         face: Face,
@@ -323,13 +379,16 @@ export default function CubePage() {
             const counts =
                 countColors(prev);
 
+            const maxStickers =
+                dimension * dimension;
+
             if (
                 selected !== "gray" &&
-                counts[selected] >= 9
+                counts[selected] >= maxStickers
             ) {
 
                 alert(
-                    `${selected} already has 9 stickers`
+                    `${selected} already has ${maxStickers} stickers`
                 );
 
                 return prev;
@@ -350,6 +409,15 @@ export default function CubePage() {
     }
 
     async function solveCube() {
+
+        if (dimension === 4) {
+
+            setSolveError(
+                "4x4 solving is not supported by the current solver yet."
+            );
+
+            return;
+        }
 
         const cubeString =
             cubeToString(cube);
@@ -428,6 +496,9 @@ export default function CubePage() {
     const cubeString =
         cubeToString(cube);
 
+    const stickerCount =
+        dimension * dimension * 6;
+
     return (
         <div
             style={{
@@ -442,11 +513,10 @@ export default function CubePage() {
 
             <Canvas
                 camera={{
-                    position: [
-                        2,
-                        2,
-                        3
-                    ]
+                    position:
+                        dimension === 3
+                            ? [2, 2, 3]
+                            : [2.5, 2.5, 3.5]
                 }}
             >
 
@@ -462,6 +532,7 @@ export default function CubePage() {
                 <Cube3D
                     cube={cube}
                     update={updateSticker}
+                    dimension={dimension}
                 />
 
                 <OrbitControls />
@@ -477,7 +548,8 @@ export default function CubePage() {
                     padding: 15,
                     borderRadius: 10,
                     width: 280,
-                    maxHeight: "calc(100vh - 40px)",
+                    maxHeight:
+                        "calc(100vh - 40px)",
                     overflowY: "auto"
                 }}
             >
@@ -487,8 +559,70 @@ export default function CubePage() {
                         marginTop: 0
                     }}
                 >
-                    Colors
+                    Cube
                 </h1>
+
+                <div
+                    style={{
+                        display: "flex",
+                        gap: 8,
+                        marginBottom: 15
+                    }}
+                >
+
+                    <button
+                        onClick={() =>
+                            changeDimension(3)
+                        }
+                        style={{
+                            flex: 1,
+                            padding: 10,
+                            border: "none",
+                            borderRadius: 6,
+                            cursor: "pointer",
+                            background:
+                                dimension === 3
+                                    ? "#fff"
+                                    : "#444",
+                            color:
+                                dimension === 3
+                                    ? "#000"
+                                    : "#fff",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        3×3
+                    </button>
+
+                    <button
+                        onClick={() =>
+                            changeDimension(4)
+                        }
+                        style={{
+                            flex: 1,
+                            padding: 10,
+                            border: "none",
+                            borderRadius: 6,
+                            cursor: "pointer",
+                            background:
+                                dimension === 4
+                                    ? "#fff"
+                                    : "#444",
+                            color:
+                                dimension === 4
+                                    ? "#000"
+                                    : "#fff",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        4×4
+                    </button>
+
+                </div>
+
+                <h2>
+                    Colors
+                </h2>
 
                 <div>
                     {(
@@ -545,6 +679,18 @@ export default function CubePage() {
                     {cubeString}
                 </pre>
 
+                <div
+                    style={{
+                        fontSize: 11,
+                        color: "#aaa",
+                        marginTop: 5
+                    }}
+                >
+                    {dimension}×{dimension} cube
+                    {" • "}
+                    {stickerCount} stickers
+                </div>
+
                 <h2>
                     Normalized Cube
                 </h2>
@@ -559,32 +705,42 @@ export default function CubePage() {
                         wordBreak: "break-all"
                     }}
                 >
-                    {normalizedCube || "Not normalized yet"}
+                    {normalizedCube ||
+                        "Not normalized yet"}
                 </pre>
 
                 <button
                     onClick={solveCube}
-                    disabled={solving}
+                    disabled={
+                        solving ||
+                        dimension === 4
+                    }
                     style={{
                         marginTop: 10,
                         width: "100%",
                         padding: 12,
                         border: "none",
                         borderRadius: 6,
-                        cursor: solving
-                            ? "wait"
-                            : "pointer",
-                        background: solving
-                            ? "#555"
-                            : "#fff",
+                        cursor:
+                            solving ||
+                            dimension === 4
+                                ? "not-allowed"
+                                : "pointer",
+                        background:
+                            solving ||
+                            dimension === 4
+                                ? "#555"
+                                : "#fff",
                         color: "#000",
                         fontWeight: "bold",
                         fontSize: 15
                     }}
                 >
-                    {solving
-                        ? "Solving..."
-                        : "Solve Cube"}
+                    {dimension === 4
+                        ? "4×4 Solver Unavailable"
+                        : solving
+                            ? "Solving..."
+                            : "Solve Cube"}
                 </button>
 
                 {solution && (

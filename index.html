@@ -1,288 +1,288 @@
 <!DOCTYPE html>
 <html lang="en-CA">
-<head>
-<meta charset="UTF-8">
-<title>Solve and See</title>
-
-<style>
-body{
-    margin:0;
-    overflow:hidden;
-    background:#222;
-    color:white;
-    font-family:Arial;
-}
-
-#ui{
-    position:absolute;
-    top:10px;
-    left:10px;
-    background:rgba(0,0,0,.75);
-    padding:10px;
-    border-radius:8px;
-}
-
-button{
-    width:70px;
-    margin:2px;
-    height:28px;
-    border:none;
-    cursor:pointer;
-    color:white;
-    font-weight:bold;
-}
-
-#counts{
-    margin-top:10px;
-    line-height:1.4;
-}
-</style>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Solve and See</title>
+
+        <style>
+            body{
+                margin:0;
+                overflow:hidden;
+                background:#222;
+                color:white;
+                font-family:Arial;
+            }
+
+            #ui{
+                position:absolute;
+                top:10px;
+                left:10px;
+                background:rgba(0,0,0,.75);
+                padding:10px;
+                border-radius:8px;
+            }
+
+            button{
+                width:70px;
+                margin:2px;
+                height:28px;
+                border:none;
+                cursor:pointer;
+                color:white;
+                font-weight:bold;
+            }
+
+            #counts{
+                margin-top:10px;
+                line-height:1.4;
+            }
+        </style>
+    </head>
 
-<body>
+    <body>
 
-<div id="ui">
+        <div id="ui">
 
-Current Color
+            Current Color
 
-<br><br>
+            <br><br>
 
-<button style="background:white;color:black" data-color="white">White</button>
-<button style="background:yellow;color:black" data-color="yellow">Yellow</button>
-<button style="background:red" data-color="red">Red</button>
-<button style="background:orange" data-color="orange">Orange</button>
-<button style="background:blue" data-color="blue">Blue</button>
-<button style="background:green" data-color="green">Green</button>
+            <button style="background:white;color:black" data-color="white">White</button>
+            <button style="background:yellow;color:black" data-color="yellow">Yellow</button>
+            <button style="background:red" data-color="red">Red</button>
+            <button style="background:orange" data-color="orange">Orange</button>
+            <button style="background:blue" data-color="blue">Blue</button>
+            <button style="background:green" data-color="green">Green</button>
 
-<div id="counts"></div>
+            <div id="counts"></div>
 
-</div>
+        </div>
 
-<script type="module">
+        <script type="module">
 
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js";
-import {OrbitControls}
-from "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js";
+            import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js";
+            import {OrbitControls}
+            from "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js";
 
-const scene=new THREE.Scene();
+            const scene=new THREE.Scene();
 
-const camera=new THREE.PerspectiveCamera(
-45,
-window.innerWidth/window.innerHeight,
-0.1,
-100
-);
+            const camera=new THREE.PerspectiveCamera(
+                45,
+                window.innerWidth/window.innerHeight,
+                0.1,
+                100
+            );
 
-camera.position.set(6,6,8);
+            camera.position.set(6,6,8);
 
-const renderer=new THREE.WebGLRenderer({antialias:true});
+            const renderer=new THREE.WebGLRenderer({antialias:true});
 
-renderer.setSize(window.innerWidth,window.innerHeight);
+            renderer.setSize(window.innerWidth,window.innerHeight);
 
-document.body.appendChild(renderer.domElement);
+            document.body.appendChild(renderer.domElement);
 
-const controls=new OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true;
+            const controls=new OrbitControls(camera,renderer.domElement);
+            controls.enableDamping=true;
 
-scene.add(new THREE.AmbientLight(0xffffff,.9));
+            scene.add(new THREE.AmbientLight(0xffffff,.9));
 
-const light=new THREE.DirectionalLight(0xffffff,1);
-light.position.set(5,8,5);
-scene.add(light);
+            const light=new THREE.DirectionalLight(0xffffff,1);
+            light.position.set(5,8,5);
+            scene.add(light);
 
-const colors={
-white:0xffffff,
-yellow:0xffff00,
-red:0xff0000,
-orange:0xff8800,
-blue:0x0000ff,
-green:0x00aa00,
-gray:0x666666
-};
+            const colors={
+                white:0xffffff,
+                yellow:0xffff00,
+                red:0xff0000,
+                orange:0xff8800,
+                blue:0x0000ff,
+                green:0x00aa00,
+                gray:0x666666
+            };
 
-let currentColor="white";
+            let currentColor="white";
 
-const counts={
-white:0,
-yellow:0,
-red:0,
-orange:0,
-blue:0,
-green:0
-};
+            const counts={
+                white:0,
+                yellow:0,
+                red:0,
+                orange:0,
+                blue:0,
+                green:0
+            };
 
-function updateCounter(){
+            function updateCounter(){
 
-document.getElementById("counts").innerHTML=`
-White ${counts.white}/9<br>
-Yellow ${counts.yellow}/9<br>
-Red ${counts.red}/9<br>
-Orange ${counts.orange}/9<br>
-Blue ${counts.blue}/9<br>
-Green ${counts.green}/9
-`;
+                document.getElementById("counts").innerHTML=`
+                    White ${counts.white}/9<br>
+                    Yellow ${counts.yellow}/9<br>
+                    Red ${counts.red}/9<br>
+                    Orange ${counts.orange}/9<br>
+                    Blue ${counts.blue}/9<br>
+                    Green ${counts.green}/9
+                `;
 
-}
+            }
 
-updateCounter();
+            updateCounter();
 
-document.querySelectorAll("button").forEach(btn=>{
+                document.querySelectorAll("button").forEach(btn=>{
 
-btn.onclick=()=>{
+                btn.onclick=()=>{
 
-currentColor=btn.dataset.color;
+                    currentColor=btn.dataset.color;
 
-};
+                };
 
-});
+            });
 
-const raycaster=new THREE.Raycaster();
+            const raycaster=new THREE.Raycaster();
 
-const mouse=new THREE.Vector2();
+            const mouse=new THREE.Vector2();
 
-const stickers=[];
+            const stickers=[];
 
-const tempGroup=new THREE.Group();
-scene.add(tempGroup);
+            const tempGroup=new THREE.Group();
+            scene.add(tempGroup);
 
-selectedCubies.forEach(c=>{
+            selectedCubies.forEach(c=>{
 
-    tempGroup.attach(c);
+                tempGroup.attach(c);
 
-});
+            });
 
-scene.add(cubeGroup);
+            scene.add(cubeGroup);
 
-tempGroup.rotation.x+=Math.PI/2;
-scene.attach(cubie);
+            tempGroup.rotation.x+=Math.PI/2;
+            scene.attach(cubie);
 
-const cubieSize=.95;
+            const cubieSize=.95;
 
-for(let x=-1;x<=1;x++)
-for(let y=-1;y<=1;y++)
-for(let z=-1;z<=1;z++){
+            for(let x=-1;x<=1;x++)
+                for(let y=-1;y<=1;y++)
+                    for(let z=-1;z<=1;z++){
 
-const cubie=new THREE.Mesh(
+                        const cubie=new THREE.Mesh(
 
-new THREE.BoxGeometry(cubieSize,cubieSize,cubieSize),
+                        new THREE.BoxGeometry(cubieSize,cubieSize,cubieSize),
 
-new THREE.MeshPhongMaterial({
-color:0x111111
-})
+                        new THREE.MeshPhongMaterial({
+                        color:0x111111
+                        })
 
-);
+                        );
 
-cubie.position.set(x,y,z);
+                        cubie.position.set(x,y,z);
 
-cubeGroup.add(cubie);
+                        cubeGroup.add(cubie);
 
-const offset=.51;
-const stickerSize=.82;
+                        const offset=.51;
+                        const stickerSize=.82;
 
-function addSticker(px,py,pz,rx,ry){
+                        function addSticker(px,py,pz,rx,ry){
 
-const mesh=new THREE.Mesh(
+                            const mesh=new THREE.Mesh(
 
-new THREE.PlaneGeometry(stickerSize,stickerSize),
+                                new THREE.PlaneGeometry(stickerSize,stickerSize),
 
-new THREE.MeshPhongMaterial({
-color:colors.gray,
-side:THREE.DoubleSide
-})
+                                new THREE.MeshPhongMaterial({
+                                color:colors.gray,
+                                side:THREE.DoubleSide
+                                })
 
-);
+                            );
 
-mesh.position.set(px,py,pz);
+                            mesh.position.set(px,py,pz);
 
-mesh.rotation.x=rx;
-mesh.rotation.y=ry;
+                            mesh.rotation.x=rx;
+                            mesh.rotation.y=ry;
 
-mesh.userData.color="gray";
+                            mesh.userData.color="gray";
 
-cubie.add(mesh);
+                            cubie.add(mesh);
 
-stickers.push(mesh);
+                            stickers.push(mesh);
 
-}
+                        }
 
-addSticker(0,0,offset,0,0);
-addSticker(0,0,-offset,0,Math.PI);
-addSticker(offset,0,0,0,-Math.PI/2);
-addSticker(-offset,0,0,0,Math.PI/2);
-addSticker(0,offset,0,-Math.PI/2,0);
-addSticker(0,-offset,0,Math.PI/2,0);
+                        addSticker(0,0,offset,0,0);
+                        addSticker(0,0,-offset,0,Math.PI);
+                        addSticker(offset,0,0,0,-Math.PI/2);
+                        addSticker(-offset,0,0,0,Math.PI/2);
+                        addSticker(0,offset,0,-Math.PI/2,0);
+                        addSticker(0,-offset,0,Math.PI/2,0);
 
-}
+                    }
 
-window.addEventListener("pointerdown",e=>{
+            window.addEventListener("pointerdown",e=>{
 
-mouse.x=(e.clientX/window.innerWidth)*2-1;
-mouse.y=-(e.clientY/window.innerHeight)*2+1;
+                mouse.x=(e.clientX/window.innerWidth)*2-1;
+                mouse.y=-(e.clientY/window.innerHeight)*2+1;
 
-raycaster.setFromCamera(mouse,camera);
+                raycaster.setFromCamera(mouse,camera);
 
-const hit=raycaster.intersectObjects(stickers);
+                const hit=raycaster.intersectObjects(stickers);
 
-if(hit.length===0) return;
+                if(hit.length===0) return;
 
-const obj=hit[0].object;
+                const obj=hit[0].object;
 
-const old=obj.userData.color;
+                const old=obj.userData.color;
 
-if(old===currentColor) return;
+                if(old===currentColor) return;
 
-if(counts[currentColor]>=9){
+                if(counts[currentColor]>=9){
 
-alert(currentColor+" already has 9 stickers.");
+                alert(currentColor+" already has 9 stickers.");
 
-return;
+                return;
 
-}
+            }
 
-if(old!=="gray")
-counts[old]--;
+            if(old!=="gray")
+            counts[old]--;
 
-counts[currentColor]++;
+            counts[currentColor]++;
 
-obj.userData.color=currentColor;
+            obj.userData.color=currentColor;
 
-obj.userData.color=currentColor;
+            obj.userData.color=currentColor;
 
-cubeState.updateSticker(
-    obj.userData.face,
-    obj.userData.index,
-    currentColor
-);
+            cubeState.updateSticker(
+                obj.userData.face,
+                obj.userData.index,
+                currentColor
+            );
 
-obj.material.color.set(colors[currentColor]);
+            obj.material.color.set(colors[currentColor]);
 
-updateCounter();
+            updateCounter();
 
-});
+            });
 
-window.addEventListener("resize",()=>{
+            window.addEventListener("resize",()=>{
 
-camera.aspect=window.innerWidth/window.innerHeight;
+                camera.aspect=window.innerWidth/window.innerHeight;
 
-camera.updateProjectionMatrix();
+                camera.updateProjectionMatrix();
 
-renderer.setSize(window.innerWidth,window.innerHeight);
+                renderer.setSize(window.innerWidth,window.innerHeight);
 
-});
+            });
 
-function animate(){
+            function animate(){
 
-requestAnimationFrame(animate);
+                requestAnimationFrame(animate);
 
-controls.update();
+                controls.update();
 
-renderer.render(scene,camera);
+                renderer.render(scene,camera);
 
-}
+            }
 
-animate();
+            animate();
 
-</script>
+        </script>
 
-</body>
+    </body>
 </html>
