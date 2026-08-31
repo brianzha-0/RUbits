@@ -5,15 +5,15 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-    index("../welcome.tsx"),
+    index("welcome/welcome.tsx"),
 
     route(
         "cube",
-        "../cube.tsx"
+        "routes/cube.tsx"
     ),
 
     route(
         "api/solve-cube",
-        "../api.solve-cube.ts"
+        "routes/api.solve-cube.ts"
     )
 ] satisfies RouteConfig;

@@ -1,7 +1,7 @@
 import Webcam from "react-webcam";
 import React from "react";
 import DSPlay from "/build/client/diamondsinall.jfif";
-import { sendImages } from "./app/api";
+import { sendImages } from "../api";
 import { Link } from "react-router";
 import Provisual from "~/components/provisual";
 
